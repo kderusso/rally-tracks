@@ -1,0 +1,32 @@
+{
+  "name": "bm25-passage-search-track-total-hits",
+  "operation-type": "search",
+  "param-source": "query-param-source",
+  "size": 10,
+  "field": "passage",
+  "track_total_hits": true
+},
+{
+  "name": "bm25-passage-english-search-track-total-hits",
+  "operation-type": "search",
+  "param-source": "query-param-source",
+  "size": 10,
+  "field": "passage.english",
+  "track_total_hits": true
+},
+{
+  "name": "bm25-passage-search",
+  "operation-type": "search",
+  "param-source": "query-param-source",
+  "size": 10,
+  "field": "passage",
+  "track_total_hits": false
+},
+{
+  "name": "bm25-passage-english-search",
+  "operation-type": "search",
+  "param-source": "query-param-source",
+  "size": 10,
+  "field": "passage.english",
+  "track_total_hits": false
+}

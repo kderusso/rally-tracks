@@ -1,0 +1,30 @@
+{% import "rally.helpers" as rally with context %}
+{
+  "version": 2,
+  "description": "Benchmark for msmarco indexing and search",
+  "indices": [
+    {
+      "name": "msmarco-passage",
+      "body": "index.json"
+    }
+  ],
+  "corpora": [
+    {
+      "name": "msmarco-passage",
+      "base-url": "https://msmarco.blob.core.windows.net/msmarcoranking/collection.tar.gz",
+      "documents": [
+        {
+          "source-file": "documents.json",
+          "document-count": 8841823,
+          "uncompressed-bytes": 3374151733
+        }
+      ]
+    }
+  ],
+  "operations": [
+    {{ rally.collect(parts="operations/*.json") }}
+  ],
+  "challenges": [
+    {{ rally.collect(parts="challenges/*.json") }}
+  ]
+}

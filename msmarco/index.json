@@ -1,0 +1,24 @@
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 1,
+      "number_of_replicas": 0
+    }
+  },
+  "mappings": {
+    "properties": {
+      "docid": {
+        "type": "keyword"
+      },
+      "passage": {
+        "type": "text",
+        "fields": {
+          "english": {
+            "type": "text",
+            "analyzer": "english"
+          }
+        }
+      }
+    }
+  }
+}
