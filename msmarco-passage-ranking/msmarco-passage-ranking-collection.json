@@ -5,7 +5,12 @@
                 "type":"keyword"
             },
             "text": {
-                "type": "text"
+                "type": "text",
+                "copy_to": "analyzed_text"
+            },
+            "analyzed_text": {
+                "type": "text",
+                "analyzer": "default_english_analyzer"
             },
             "text_expansion_elser": {
                 "type": "sparse_vector"
@@ -19,6 +24,31 @@
         "index": {
             "number_of_replicas": "{{number_of_replicas | default(0)}}",
             "number_of_shards": "{{number_of_shards | default(1)}}"
+        },
+        "analysis": {
+            "filter": {
+                "english-stem-filter": {
+                    "type": "stemmer",
+                    "language": "light_english"
+                },
+                "english-stop-words-filter": {
+                    "type": "stop",
+                    "stopwords": "_english_"
+                }
+            },
+            "analyzer": {
+                "default_english_analyzer": {
+                    "type": "custom",
+                    "tokenizer": "standard",
+                    "filter": [
+                        "cjk_width",
+                        "lowercase",
+                        "asciifolding",
+                        "english-stop-words-filter",
+                        "english-stem-filter"
+                    ]
+                }
+            }
         }
     }
 }

@@ -147,6 +147,16 @@
     {
       "name": "pruned-weighted-terms-recall-10-100",
       "operation": "pruned-weighted-terms-recall-10-100"
+    },
+    {
+      "name": "default-bm25-relevance",
+      "operation": "default-bm25-relevance",
+      "clients": {{search_clients | default(1)}}
+    },
+    {
+      "name": "analyzed-bm25-relevance",
+      "operation": "analyzed-bm25-relevance",
+      "clients": {{search_clients | default(1)}}
     }
   ]
 }

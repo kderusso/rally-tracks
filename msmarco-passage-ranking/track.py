@@ -122,17 +122,24 @@ class QueryParamsSource:
         self._text_field = params.get("text_field", "text")
         self._text_expansion_field = params.get("text_expansion_field", "text_expansion_elser")
         self._query_file = params.get("query_source", "queries.json")
+        self._qrels_file = params.get("qrels_source", "qrels-small.tsv")
         self._query_strategy = params.get("query_strategy", "bm25")
         self._track_total_hits = params.get("track_total_hits", False)
         self._rescore = params.get("rescore", False)
         self._prune = params.get("prune", False)
         self._params = params
         self.infinite = True
+        self._queries = []
 
         cwd = os.path.dirname(__file__)
         with open(os.path.join(cwd, self._query_file), "r") as file:
             self._queries = json.load(file)
         self._iters = 0
+
+        cwd = os.path.dirname(__file__)
+        with open(os.path.join(cwd, self._query_file), "r") as file:
+            self._queries = json.load(file)
+        self._qrels = read_qrels(os.path.join(cwd, self._qrels_file))
 
     def partition(self, partition_index, total_partitions):
         return self
@@ -171,6 +178,10 @@ class QueryParamsSource:
             "size": self._size,
             "track_total_hits": self._track_total_hits,
             "body": query,
+            "qrels": self._qrels,
+            "text_field": self._text_field,
+            "text_expansion_field": self._text_expansion_field,
+            "queries": self._queries,
         }
 
 
@@ -298,7 +309,70 @@ class WeightedTermsRecallRunner:
         return "weighted_terms_recall"
 
 
+class TextSearchRelevanceRunner:
+    async def __call__(self, es, params):
+        text_search_results = defaultdict(dict)
+        hybrid_search_results = defaultdict(dict)
+
+        for query in params["queries"]:
+            query_id = query["id"]
+
+            bm25_query = generate_bm25_query(params["text_field"], query["query"], 1)
+            sparse_vector_query = {
+                "query": {
+                    "sparse_vector": {
+                        "field": params["text_expansion_field"],
+                        "query_vector": query[params["text_expansion_field"]],
+                        "prune": False,
+                        "boost": 1,
+                    }
+                }
+            }
+            hybrid_query = {"query": {"bool": {"should": [bm25_query["query"], sparse_vector_query["query"]]}}}
+
+            text_search_result = await es.search(
+                body=bm25_query,
+                index=params["index"],
+                request_cache=params["cache"],
+                size=params["size"],
+            )
+
+            hybrid_search_result = await es.search(
+                body=hybrid_query,
+                index=params["index"],
+                request_cache=params["cache"],
+                size=params["size"],
+            )
+
+            text_search_hits = {hit["_source"]["id"]: hit["_score"] for hit in text_search_result["hits"]["hits"]}
+            hybrid_search_hits = {hit["_source"]["id"]: hit["_score"] for hit in hybrid_search_result["hits"]["hits"]}
+
+            # Construct input to NDCG calculation based on returned hits
+            for doc_id, score in text_search_hits.items():
+                text_search_results[query_id][doc_id] = score
+            for doc_id, score in hybrid_search_hits.items():
+                hybrid_search_results[query_id][doc_id] = score
+
+        text_search_relevance = calc_ndcg(params["qrels"], text_search_results, [10, 100])
+        hybrid_search_relevance = calc_ndcg(params["qrels"], hybrid_search_results, [10, 100])
+
+        print(
+            f'text_search_relevance_10 = {text_search_relevance["ndcg_cut@10"]}, text_search_relevance_100 = {text_search_relevance["ndcg_cut@100"]}, hybrid_search_relevance_10 = {hybrid_search_relevance["ndcg_cut@10"]}, hybrid_search_relevance_100 = {hybrid_search_relevance["ndcg_cut@100"]}\n'
+        )
+
+        return {
+            "text_search_relevance_10": text_search_relevance["ndcg_cut@10"],
+            "text_search_relevance_100": text_search_relevance["ndcg_cut@100"],
+            "hybrid_search_relevance_10": text_search_relevance["ndcg_cut@10"],
+            "hybrid_search_relevance_100": text_search_relevance["ndcg_cut@100"],
+        }
+
+    def __repr__(self, *args, **kwargs):
+        return "text_search_relevance"
+
+
 def register(registry):
     registry.register_param_source("query_param_source", QueryParamsSource)
     registry.register_param_source("weighted_terms_recall_param_source", WeightedRecallParamSource)
     registry.register_runner("weighted_terms_recall", WeightedTermsRecallRunner(), async_runner=True)
+    registry.register_runner("text_search_relevance", TextSearchRelevanceRunner(), async_runner=True)

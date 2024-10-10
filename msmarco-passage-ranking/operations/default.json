@@ -149,4 +149,30 @@
    "qrels_source": "qrels-small.tsv",
    "text_expansion_field": "text_expansion_elser",
    "include-in-reporting": true
+},
+{
+   "name": "default-bm25-relevance",
+   "operation-type": "text_search_relevance",
+   "param-source": "query_param_source",
+   "query_source": "queries-small.json",
+   "qrels_source": "qrels-small.tsv",
+   "text_field": "text",
+   "text_expansion_field": "text_expansion_elser",
+   "size": 100,
+   "include-in-reporting": true,
+   "track_total_hits": true,
+   "include-in-reporting": true
+},
+{
+   "name": "analyzed-bm25-relevance",
+   "operation-type": "text_search_relevance",
+   "param-source": "query_param_source",
+   "query_source": "queries-small.json",
+   "qrels_source": "qrels-small.tsv",
+   "text_field": "analyzed_text",
+   "text_expansion_field": "text_expansion_elser",
+   "size": 100,
+   "include-in-reporting": true,
+   "track_total_hits": true,
+   "include-in-reporting": true
 }
