@@ -4,15 +4,6 @@
   "default": true,
   "schedule": [
     {
-      "name": "setup_elser_endpoint",
-      "operation": {
-        "number_of_allocations": {{ number_of_allocations|default(1) }},
-        "threads_per_allocation": {{ threads_per_allocation|default(1) }},
-        "operation-type": "setup_elser_endpoint",
-        "include-in-reporting": false
-      }
-    },
-    {
       "operation": "delete-index"
     },
     {
@@ -38,7 +29,8 @@
       "operation": {
         "operation-type": "bulk",
         "bulk-size": {{bulk_size | default(500)}},
-        "ingest-percentage": {{ingest_percentage | default(100)}}
+        "ingest-percentage": {{ingest_percentage | default(100)}},
+        "request-timeout": 60.0
       },
       "clients": {{bulk_indexing_clients | default(8)}}
     },
@@ -156,6 +148,14 @@
     {
       "name": "pruned-weighted-terms-recall-10-100",
       "operation": "pruned-weighted-terms-recall-10-100"
+    },
+    {
+      "name": "semantic-search",
+      "operation": "semantic-search"
+    },
+    {
+      "name": "semantic-search-with-rerank",
+      "operation": "semantic-search-with-rerank"
     }
   ]
 }

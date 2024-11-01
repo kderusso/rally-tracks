@@ -9,7 +9,8 @@ from elasticsearch import BadRequestError
 Qrels = Dict[str, Dict[str, int]]
 Results = Dict[str, Dict[str, float]]
 
-ELSER_ENDPOINT = "my-elser-endpoint"
+ELSER_ENDPOINT = "elser-endpoint"
+ELKER_ENDPOINT = "elker-endpoint"
 
 
 def calc_ndcg(qrels: Qrels, results: Results, k_list: list):
@@ -110,6 +111,23 @@ def generate_rescored_pruned_query(field, query_expansion, num_candidates, boost
     }
 
 
+def generate_semantic_query(field, query, boost=1.0):
+    return {"query": {"semantic": {"field": field, "query": query, "boost": boost}}}
+
+
+def generate_semantic_query_with_rerank(text_field, semantic_text_field, query, boost=1.0):
+    return {
+        "retriever": {
+            "text_similarity_reranker": {
+                "inference_id": ELKER_ENDPOINT,
+                "field": text_field,
+                "inference_text": query,
+                "retriever": {"standard": {"query": {"semantic": {"field": semantic_text_field, "query": query}}}},
+            }
+        }
+    }
+
+
 class QueryParamsSource:
     def __init__(self, track, params, **kwargs):
         # choose a suitable index: if there is only one defined for this track
@@ -125,6 +143,7 @@ class QueryParamsSource:
         self._num_candidates = params.get("num_candidates", 10)
         self._text_field = params.get("text_field", "text")
         self._text_expansion_field = params.get("text_expansion_field", "text_expansion_elser")
+        self._semantic_text_field = params.get("semantic_text_field", "semantic_text")
         self._query_file = params.get("query_source", "queries.json")
         self._query_strategy = params.get("query_strategy", "bm25")
         self._track_total_hits = params.get("track_total_hits", False)
@@ -165,6 +184,10 @@ class QueryParamsSource:
             query = generate_combine_bm25_weighted_terms_query(
                 self._text_field, self._text_expansion_field, query_obj["query"], 1, query_obj[self._text_expansion_field], 1
             )
+        elif self._query_strategy == "semantic":
+            query = generate_semantic_query(self._semantic_text_field, query_obj["query"], 1)
+        elif self._query_strategy == "semantic_with_rerank":
+            query = generate_semantic_query_with_rerank(self._text_field, self._semantic_text_field, query_obj["query"], 1)
         else:
             raise Exception(f"The query strategy \\`{self._query_strategy}]\\` is not implemented")
 

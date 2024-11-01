@@ -27,7 +27,7 @@
     }
   ],
   "operations": [
-    {{ rally.collect(parts="operations/*.json") }}
+    {{ rally.collect(parts="operations/with-inference.json") }}
   ],
   "challenges": [
     {{ rally.collect(parts="challenges/with-inference.json") }}
