@@ -9,7 +9,7 @@
   "indices": [
     {
       "name": "msmarco-passage-ranking-collection",
-      "body": "msmarco-passage-ranking-collection.json"
+      "body": "msmarco-passage-ranking-collection-with-inference.json"
     }
   ],
   "corpora": [
@@ -30,6 +30,6 @@
     {{ rally.collect(parts="operations/*.json") }}
   ],
   "challenges": [
-    {{ rally.collect(parts="challenges/*.json") }}
+    {{ rally.collect(parts="challenges/with-inference.json") }}
   ]
 }

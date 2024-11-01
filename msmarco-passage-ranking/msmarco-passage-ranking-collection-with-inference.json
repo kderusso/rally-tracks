@@ -1,0 +1,29 @@
+{
+    "mappings": {
+        "properties": {
+            "id": {
+                "type":"keyword"
+            },
+            "text": {
+                "type": "text",
+                "copy_to": "semantic_text"
+            },
+            "text_expansion_elser": {
+                "type": "sparse_vector"
+            },
+            "text_expansion_splade": {
+                "type": "sparse_vector"
+            },
+            "semantic_text": {
+                "type": "semantic_text",
+                "inference_id": "my-elser-endpoint"
+            }
+        }
+    },
+    "settings": {
+        "index": {
+            "number_of_replicas": "{{number_of_replicas | default(0)}}",
+            "number_of_shards": "{{number_of_shards | default(1)}}"
+        }
+    }
+}

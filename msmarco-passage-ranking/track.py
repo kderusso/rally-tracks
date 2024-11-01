@@ -4,8 +4,12 @@ import os
 from collections import defaultdict
 from typing import Dict
 
+from elasticsearch import BadRequestError
+
 Qrels = Dict[str, Dict[str, int]]
 Results = Dict[str, Dict[str, float]]
+
+ELSER_ENDPOINT = "my-elser-endpoint"
 
 
 def calc_ndcg(qrels: Qrels, results: Results, k_list: list):
@@ -298,7 +302,35 @@ class WeightedTermsRecallRunner:
         return "weighted_terms_recall"
 
 
+async def setup_elser_endpoint(es, params):
+    number_of_allocations = params["number_of_allocations"]
+    threads_per_allocation = params["threads_per_allocation"]
+    try:
+        await es.inference.put(
+            task_type="sparse_embedding",
+            inference_id=ELSER_ENDPOINT,
+            inference_config={
+                "service": "elser",
+                "service_settings": {"num_allocations": number_of_allocations, "num_threads": threads_per_allocation},
+            },
+        )
+        return True
+    except BadRequestError as bre:
+        if (
+            bre.body["error"]["root_cause"][0]["reason"]
+            == f"Model IDs must be unique. Requested model ID [elser-endpoint] matches existing model IDs but must not."
+        ):
+            return True
+        else:
+            print(bre)
+            return False
+    except Exception as e:
+        print(e)
+        return False
+
+
 def register(registry):
     registry.register_param_source("query_param_source", QueryParamsSource)
     registry.register_param_source("weighted_terms_recall_param_source", WeightedRecallParamSource)
     registry.register_runner("weighted_terms_recall", WeightedTermsRecallRunner(), async_runner=True)
+    registry.register_runner("setup_elser_endpoint", setup_elser_endpoint, async_runner=True)
