@@ -28,11 +28,11 @@
     {
       "operation": {
         "operation-type": "bulk",
-        "bulk-size": {{bulk_size | default(500)}},
-        "ingest-percentage": {{ingest_percentage | default(100)}},
-        "request-timeout": 60.0
+        "bulk-size": {{bulk_size | default(200)}},
+        "ingest-percentage": {{ingest_percentage | default(1)}},
+        "request-timeout": 1000.0
       },
-      "clients": {{bulk_indexing_clients | default(8)}}
+      "clients": {{bulk_indexing_clients | default(2)}}
     },
     {
       "name": "refresh-after-index",
@@ -65,20 +65,6 @@
     {
       "name": "text-expansion-search-maxwand-disabled",
       "operation": "text-expansion-search-maxwand-disabled",
-      "warmup-iterations": 100,
-      "iterations": 1000,
-      "clients": {{search_clients | default(1)}}
-    },
-    {
-      "name": "text-expansion-splade-search-maxwand-enabled",
-      "operation": "text-expansion-splade-search-maxwand-enabled",
-      "warmup-iterations": 100,
-      "iterations": 1000,
-      "clients": {{search_clients | default(1)}}
-    },
-    {
-      "name": "text-expansion-splade-search-maxwand-disabled",
-      "operation": "text-expansion-splade-search-maxwand-disabled",
       "warmup-iterations": 100,
       "iterations": 1000,
       "clients": {{search_clients | default(1)}}
@@ -142,20 +128,32 @@
       "clients": {{search_clients | default(1)}}
     },
     {
-      "name": "pruned-weighted-terms-recall-10-10",
-      "operation": "pruned-weighted-terms-recall-10-10"
+      "name": "semantic-search-maxwand-enabled",
+      "operation": "semantic-search-maxwand-enabled",
+      "warmup-iterations": 100,
+      "iterations": 1000,
+      "clients": {{search_clients | default(1)}}
     },
     {
-      "name": "pruned-weighted-terms-recall-10-100",
-      "operation": "pruned-weighted-terms-recall-10-100"
+      "name": "semantic-search-maxwand-disabled",
+      "operation": "semantic-search-maxwand-disabled",
+      "warmup-iterations": 100,
+      "iterations": 1000,
+      "clients": {{search_clients | default(1)}}
     },
     {
-      "name": "semantic-search",
-      "operation": "semantic-search"
+      "name": "semantic-search-with-rerank-maxwand-enabled",
+      "operation": "semantic-search-with-rerank-maxwand-enabled",
+      "warmup-iterations": 100,
+      "iterations": 1000,
+      "clients": {{search_clients | default(1)}}
     },
     {
-      "name": "semantic-search-with-rerank",
-      "operation": "semantic-search-with-rerank"
+      "name": "semantic-search-with-rerank-maxwand-disabled",
+      "operation": "semantic-search-with-rerank-maxwand-disabled",
+      "warmup-iterations": 100,
+      "iterations": 1000,
+      "clients": {{search_clients | default(1)}}
     }
   ]
 }
