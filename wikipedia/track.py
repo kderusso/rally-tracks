@@ -191,17 +191,36 @@ class RetrieverParamSource(QueryIteratorParamSource):
         self._index_name = params.get("index", track.indices[0].name if len(track.indices) == 1 else "_all")
         self._search_fields = self._params["search-fields"]
         self._rerank = params.get("rerank", False)
-        self._reranker = params.get("reranker", "random_reranker")
+        self._reranker = params.get("reranker", "text_similarity_reranker")
+        self._rerank_snippets = params.get("snippets")  # TODO will not work with random reranker
+        self._rerank_num_snippets = params.get("num_snippets", 1)
         self._size = params.get("size", 20)
 
     def params(self):
-        standard_retriever = {
-            "standard": {"query": {"query_string": {"query": next(self._queries_iterator), "default_field": self._search_fields}}}
-        }
+        query_string = next(self._queries_iterator)
+        standard_retriever = {"standard": {"query": {"query_string": {"query": query_string, "default_field": self._search_fields}}}}
 
         retriever = standard_retriever
         if self._rerank:
-            retriever = {self._reranker: {"retriever": standard_retriever, "field": self._search_fields, "rank_window_size": self._size}}
+            if self._rerank_snippets:
+                retriever = {
+                    self._reranker: {
+                        "retriever": standard_retriever,
+                        "field": self._search_fields,
+                        "rank_window_size": self._size,
+                        "inference_text": query_string,
+                        "snippets": {"num_snippets": self._rerank_num_snippets},
+                    }
+                }
+            else:
+                retriever = {
+                    self._reranker: {
+                        "retriever": standard_retriever,
+                        "field": self._search_fields,
+                        "rank_window_size": self._size,
+                        "inference_text": query_string,
+                    }
+                }
 
         try:
             return {

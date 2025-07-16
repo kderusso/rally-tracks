@@ -234,5 +234,17 @@
   "size" : {{ retriever_search_page_size | default(20) | int }},
   "search-fields" : "{{ retriever_search_fields | default("*") }}",
   "rerank": "True",
-  "reranker": "random_reranker"
+  "reranker": {{ retriever_reranker | default("text_similarity_reranker") | tojson }},
+  "snippets": false
+},
+{
+  "name": "retriever-search-with-rerank-snippets",
+  "operation-type": "raw-request",
+  "param-source": "retriever-search",
+  "size" : {{ retriever_search_page_size | default(20) | int }},
+  "search-fields" : "{{ retriever_search_fields | default("*") }}",
+  "rerank": "True",
+  "reranker": {{ retriever_reranker | default("text_similarity_reranker") | tojson }},
+  "snippets": true,
+  "num_snippets": {{ retriever_search_num_snippets | default(3) | int }}
 }
