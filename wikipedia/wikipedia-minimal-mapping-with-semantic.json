@@ -1,0 +1,38 @@
+{
+  "settings": {
+    "index": {
+      {# non-serverless-index-settings-marker-start #}{%- if build_flavor != "serverless" or serverless_operator == true -%}
+      "number_of_shards": {{number_of_shards | default(1)}},
+      "number_of_replicas": {{number_of_replicas | default(0)}}
+      {%- endif -%}{# non-serverless-index-settings-marker-end #}
+    }
+  },
+  "mappings": {
+    "properties": {
+      "title": {
+        "type": "text",
+        "copy_to": "title_semantic"
+      },
+      "title_semantic": {
+        "type": "semantic_text",
+        "inference_id": "my-elser-endpoint"
+      },
+      "content": {
+        "type": "text",
+        "copy_to": "content_semantic"
+      },
+      "content_semantic": {
+        "type": "semantic_text",
+        "inference_id": "my-elser-endpoint"
+      },
+      "namespace": {
+        "ignore_above": 1024,
+        "type": "keyword"
+      },
+      "redirect": {
+        "ignore_above": 1024,
+        "type": "keyword"
+      }
+    }
+  }
+}
