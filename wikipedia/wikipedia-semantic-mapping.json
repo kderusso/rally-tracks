@@ -14,16 +14,14 @@
         "copy_to": "title_semantic"
       },
       "title_semantic": {
-        "type": "semantic_text",
-        "inference_id": "my-elser-endpoint"
+        "type": "semantic_text"
       },
       "content": {
         "type": "text",
         "copy_to": "content_semantic"
       },
       "content_semantic": {
-        "type": "semantic_text",
-        "inference_id": "my-elser-endpoint"
+        "type": "semantic_text"
       },
       "namespace": {
         "ignore_above": 1024,

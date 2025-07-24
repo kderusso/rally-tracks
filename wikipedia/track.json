@@ -5,8 +5,8 @@
   "description": "Benchmark for search with Wikipedia data",
   "indices": [
     {
-      "name": "wikipedia",
-      "body": "wikipedia-{{ index_mapping_type | default("minimal") }}-mapping.json"
+      "name": "wikipedia_semantic",
+      "body": "wikipedia-{{ index_mapping_type | default("semantic") }}-mapping.json"
     }
   ],
   "corpora": [

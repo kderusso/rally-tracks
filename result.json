@@ -1,0 +1,32 @@
+{
+  "took": 6917,
+  "timed_out": false,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
+  },
+  "hits": {
+    "total": {
+      "value": 8917,
+      "relation": "eq"
+    },
+    "max_score": 0.010665074,
+    "hits": [
+      {
+        "_index": "wikipedia_semantic",
+        "_id": "Jerry Springer (talk show)",
+        "_score": 0.010665074,
+        "_source": {
+          "title": "Jerry Springer (talk show)"
+        },
+        "highlight": {
+          "content_semantic": [
+            "res=9B05E6DF123FF937A15757C0A96E958260|work=[[The New York Times]]|date=April 24, 1998|access-date=March 20, 2008}}</ref> It featured almost non-stop fighting between guests—5 to 12 per day during one April 1998 week—and religious figures and even other TV personalities complained.<ref name=\"harvest\"/> [[Chicago City Council]] suggested that if the fistfights and chair-throwing were real, then the guests should be arrested for committing acts of violence in the city, as alderman [[Edward M. Burke|Ed Burke]] was concerned over the fact that the off-duty Chicago police officers serving as security guards for the program failed to take legal action against fighting guests.<ref>{{cite news|last=Robinson|first=Bryan|date=June 3, 1999|title=Jerry Springer hearing before Chicago City Council to reveal whether show violence is real or staged|publisher=[[Court TV]]|url=http://www.courttv.com/archive/trials/springer/060399_ctv.html|url-status=dead|archive-url=https://web.archive.org/web/20080601090742/http://www.courttv.com/archive/trials/springer/060399_ctv.html|archive-date=June 1, 2008}}</ref> Springer explained that the violence on the program \"look[ed] real\" to him, also arguing that the fighting on the show \"never, ever, ever glamorizes violence\".<ref name=\"weber\">{{cite news|last=Weber|first= Bruce|title=  Live, at Chicago's City Hall: It's the 'Jerry Springer Show'|url=https://query.nytimes.com/gst/fullpage.html?"
+          ]
+        }
+      }
+    ]
+  }
+}
