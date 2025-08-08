@@ -1,0 +1,29 @@
+{
+    "mappings": {
+        "properties": {
+            "id": {
+                "type":"keyword"
+            },
+            "title": {
+                "type": "text",
+                "copy_to": "title_semantic"
+            },
+            "content": {
+                "type": "text",
+                "copy_to": "content_semantic"
+            },
+            "title_semantic": {
+                "type": "semantic_text"
+            },
+            "content_semantic": {
+                "type": "semantic_text"
+            }
+        }
+    },
+    "settings": {
+        "index": {
+            "number_of_replicas": "{{number_of_replicas | default(0)}}",
+            "number_of_shards": "{{number_of_shards | default(1)}}"
+        }
+    }
+}

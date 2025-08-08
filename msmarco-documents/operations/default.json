@@ -1,0 +1,130 @@
+{
+   "name": "search-bm25",
+   "operation-type": "search",
+   "param-source": "query_param_source",
+   "query_source": "queries.json",
+   "query_strategy": "bm25",
+   "field": "content",
+   "rerank": false
+},
+{
+   "name": "search-bm25-rerank",
+   "operation-type": "search",
+   "param-source": "query_param_source",
+   "query_source": "queries.json",
+   "query_strategy": "bm25",
+   "field": "content",
+   "rerank": true,
+   "snippets": false,
+   "rerank_field": "content"
+},
+{
+   "name": "search-bm25-rerank-snippets",
+   "operation-type": "search",
+   "param-source": "query_param_source",
+   "query_source": "queries.json",
+   "query_strategy": "bm25",
+   "field": "content",
+   "rerank": true,
+   "snippets": true,
+   "rerank_field": "content"
+},
+{
+   "name": "search-semantic",
+   "operation-type": "search",
+   "param-source": "query_param_source",
+   "query_source": "queries.json",
+   "query_strategy": "semantic",
+   "field": "content_semantic",
+   "rerank": false
+},
+{
+   "name": "search-semantic-rerank",
+   "operation-type": "search",
+   "param-source": "query_param_source",
+   "query_source": "queries.json",
+   "query_strategy": "semantic",
+   "field": "content_semantic",
+   "rerank": true,
+   "snippets": false,
+   "rerank_field": "content_semantic"
+},
+{
+   "name": "search-semantic-rerank-snippets",
+   "operation-type": "search",
+   "param-source": "query_param_source",
+   "query_source": "queries.json",
+   "query_strategy": "semantic",
+   "field": "content_semantic",
+   "rerank": true,
+   "snippets": true,
+   "rerank_field": "content_semantic"
+},
+{
+   "name": "bm25-relevance",
+   "operation-type": "recall",
+   "param-source": "recall_param_source",
+   "query_source": "queries-small.json",
+   "qrels_source": "qrels-small.tsv",
+   "field": "content",
+   "rerank": false,
+   "include-in-reporting": true
+},
+{
+   "name": "bm25-rerank-relevance",
+   "operation-type": "recall",
+   "param-source": "recall_param_source",
+   "query_source": "queries-small.json",
+   "qrels_source": "qrels-small.tsv",
+   "field": "content",
+   "rerank": true,
+   "rerank_field": "content",
+   "snippets": false,
+   "include-in-reporting": true
+},
+{
+   "name": "bm25-rerank-relevance-snippets",
+   "operation-type": "recall",
+   "param-source": "recall_param_source",
+   "query_source": "queries-small.json",
+   "qrels_source": "qrels-small.tsv",
+   "field": "content",
+   "rerank": true,
+   "rerank_field": "content",
+   "snippets": true,
+   "include-in-reporting": true
+},
+{
+   "name": "semantic-relevance",
+   "operation-type": "recall",
+   "param-source": "recall_param_source",
+   "query_source": "queries-small.json",
+   "qrels_source": "qrels-small.tsv",
+   "field": "content_semantic",
+   "rerank": false,
+   "include-in-reporting": true
+},
+{
+   "name": "semantic-rerank-relevance",
+   "operation-type": "recall",
+   "param-source": "recall_param_source",
+   "query_source": "queries-small.json",
+   "qrels_source": "qrels-small.tsv",
+   "field": "content_semantic",
+   "rerank": true,
+   "rerank_field": "content_semantic",
+   "snippets": false,
+   "include-in-reporting": true
+},
+{
+   "name": "semantic-rerank-relevance-snippets",
+   "operation-type": "recall",
+   "param-source": "recall_param_source",
+   "query_source": "queries-small.json",
+   "qrels_source": "qrels-small.tsv",
+   "field": "content_semantic",
+   "rerank": true,
+   "rerank_field": "content_semantic",
+   "snippets": true,
+   "include-in-reporting": true
+}

@@ -1,0 +1,35 @@
+{% import "rally.helpers" as rally with context %}
+{
+  "version": 2,
+  "description": "Benchmark bm25, semantic and hybrid search on the MS MARCO passage dataset",
+  "dependencies": [
+    "pytrec_eval==0.5",
+    "numpy"
+  ],
+  "indices": [
+    {
+      "name": "msmarco-documents-collection",
+      "body": "msmarco-documents-collection.json"
+    }
+  ],
+  "corpora": [
+    {
+      "name": "msmarco-documents",
+      "base-url": "https://rally-tracks.elastic.co/msmarco-documents",
+      "documents": [
+        {
+          "source-file": "documents.json.bz2",
+          "document-count": 3213835,
+          "compressed-bytes": 17469732480,
+          "uncompressed-bytes": 22864415558
+        }
+      ]
+    }
+  ],
+  "operations": [
+    {{ rally.collect(parts="operations/*.json") }}
+  ],
+  "challenges": [
+    {{ rally.collect(parts="challenges/*.json") }}
+  ]
+}

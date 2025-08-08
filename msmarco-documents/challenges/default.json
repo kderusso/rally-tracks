@@ -1,0 +1,102 @@
+{
+  "name": "msmarco-documents",
+  "description": "Indexes large documents to test relevance and reranking",
+  "default": true,
+  "schedule": [
+    {
+      "operation": "delete-index"
+    },
+    {
+      "operation": {
+        "include-in-reporting": false,
+        "operation-type": "create-index"
+      }
+    },
+    {
+      "name": "check-cluster-health",
+      "operation": {
+        "include-in-reporting": false,
+        "operation-type": "cluster-health",
+        "index": "msmarco-documents-collection",
+        "request-params": {
+          "wait_for_status": "{{cluster_health | default('yellow')}}",
+          "wait_for_no_relocating_shards": "true"
+        },
+        "retry-until-success": true
+      }
+    },
+    {
+      "operation": {
+        "operation-type": "bulk",
+        "bulk-size": {{bulk_size | default(10)}},
+        "ingest-percentage": {{ingest_percentage | default(100)}}
+      },
+      "clients": {{bulk_indexing_clients | default(4)}}
+    },
+    {
+      "name": "refresh-after-index",
+      "operation": {
+        "operation-type": "refresh",
+        "request-timeout": 1000,
+        "include-in-reporting": true
+      }
+    },
+    {
+      "name": "wait-until-merges-finish-after-index",
+      "operation": {
+        "operation-type": "index-stats",
+        "index": "_all",
+        "condition": {
+          "path": "_all.total.merges.current",
+          "expected-value": 0
+        },
+        "retry-until-success": true,
+        "include-in-reporting": false
+      }
+    },
+    {
+      "name": "search-bm25",
+      "operation": "search-bm25",
+      "warmup-iterations": 100,
+      "iterations": 1000,
+      "clients": {{search_clients | default(1)}}
+    },
+    {
+      "name": "search-bm25-rerank",
+      "operation": "search-bm25-rerank",
+      "warmup-iterations": 100,
+      "iterations": 1000,
+      "clients": {{search_clients | default(1)}}
+    },
+    {
+      "name": "search-semantic",
+      "operation": "search-semantic",
+      "warmup-iterations": 100,
+      "iterations": 1000,
+      "clients": {{search_clients | default(1)}}
+    },
+    {
+      "name": "search-semantic-rerank",
+      "operation": "search-semantic-rerank",
+      "warmup-iterations": 100,
+      "iterations": 1000,
+      "clients": {{search_clients | default(1)}}
+    },
+    {
+      "name": "bm25-relevance",
+      "operation": "bm25-relevance"
+    },
+    {
+      "name": "bm25-rerank-relevance",
+      "operation": "bm25-rerank-relevance"
+    },
+    {
+      "name": "semantic-relevance",
+      "operation": "semantic-relevance"
+    },
+    {
+      "name": "semantic-rerank-relevance",
+      "operation": "semantic-rerank-relevance"
+    }
+  ]
+}
