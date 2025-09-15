@@ -209,7 +209,7 @@ class RetrieverParamSource(QueryIteratorParamSource):
                         "field": self._search_fields,
                         "rank_window_size": self._size,
                         "inference_text": query_string,
-                        "snippets": {"num_snippets": self._rerank_num_snippets},
+                        "chunk_rescorer": {"size": self._rerank_num_snippets},
                     }
                 }
             else:
