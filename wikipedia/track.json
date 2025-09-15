@@ -6,7 +6,7 @@
   "indices": [
     {
       "name": "wikipedia",
-      "body": "wikipedia-{{ index_mapping_type | default("full") }}-mapping.json"
+      "body": "wikipedia-{{ index_mapping_type | default("minimal") }}-mapping.json"
     }
   ],
   "corpora": [
