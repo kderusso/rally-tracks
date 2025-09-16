@@ -207,7 +207,7 @@ class RetrieverParamSource(QueryIteratorParamSource):
                     self._reranker: {
                         "retriever": standard_retriever,
                         "field": self._search_fields,
-                        "rank_window_size": self._size,
+                        "rank_window_size": 32,
                         "inference_text": query_string,
                         "chunk_rescorer": {"size": self._rerank_num_snippets},
                     }
@@ -217,7 +217,7 @@ class RetrieverParamSource(QueryIteratorParamSource):
                     self._reranker: {
                         "retriever": standard_retriever,
                         "field": self._search_fields,
-                        "rank_window_size": self._size,
+                        "rank_window_size": 32,
                         "inference_text": query_string,
                     }
                 }
